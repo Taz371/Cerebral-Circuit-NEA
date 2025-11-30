@@ -35,6 +35,7 @@ public class EnemyScript : MonoBehaviour
         {
             SpawnEnemy();
             StartCoroutine(findPlayer());
+            Debug.Log("SKIB");
         }
     }
 
@@ -60,7 +61,7 @@ public class EnemyScript : MonoBehaviour
         while (true)
         {
             pathFindingScript.BreadthFirstSearch(gameManagerScript.mazeGraph, enemyPosition, playerMovementScript.playerPosition);
-
+            Debug.Log(pathFindingScript.path.Count);
             if (pathFindingScript.path.Count > 1)
             {
                 MoveEnemy(pathFindingScript.path[1]);

@@ -23,9 +23,6 @@ public class AStarScript : MonoBehaviour
     private GameObject block;
     private SpriteRenderer spriteR;
 
-    bool started = false;
-    int aStarNodesExpanded = 0;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -44,11 +41,11 @@ public class AStarScript : MonoBehaviour
 
     public IEnumerator SolveMaze()
     {
-        aStar(playerMovementScript.playerPosition, gameManagerScript.winPoint);
+        StartCoroutine(aStar(playerMovementScript.playerPosition, gameManagerScript.winPoint));
         int i = 0;
         while (i < path.Count && path[i] != gameManagerScript.winPoint)
         {
-            ChangeColorRed(path[i]);
+            ChangeColorBlue(path[i]);
             i++;
             yield return new WaitForSeconds(0f);
         }
@@ -68,7 +65,21 @@ public class AStarScript : MonoBehaviour
         spriteR.color = Color.red;
     }
 
-    void aStar(string startPos, string targetPos)
+    void ChangeColorBlue(string point)
+    {
+        block = GameObject.Find(point);
+
+        if (block != null)
+        {
+            GameObject childObj = block.transform.Find("Filling").gameObject;
+
+            spriteR = childObj.GetComponent<SpriteRenderer>();
+        }
+
+        spriteR.color = Color.blue;
+    }
+
+    public IEnumerator aStar(string startPos, string targetPos)
     {
         string[] targetCoords = targetPos.Split(',');
 
@@ -83,8 +94,8 @@ public class AStarScript : MonoBehaviour
         while(openList.Count > 0)
         {
             var minItem = openList.OrderBy(item => item.fValue).First();
-            aStarNodesExpanded++;
-
+            ChangeColorRed(minItem.node);
+            yield return new WaitForSeconds(0.1f);
             string[] minItemCoords = minItem.node.Split(',');
 
             int minItemX = int.Parse(minItemCoords[0]);
@@ -120,15 +131,15 @@ public class AStarScript : MonoBehaviour
                         float f = tentativeG + h;
 
                         if (!openList.Any(x => x.node == neighbour))
+                        {
                             openList.Add((f, neighbour));
+                        }
 
                         cameFrom[neighbour] = minItem.node;
                     }
                 }
             }
         }
-
-        Debug.Log("A* nodes expanded: " + aStarNodesExpanded);
 
         string current = targetPos;
 

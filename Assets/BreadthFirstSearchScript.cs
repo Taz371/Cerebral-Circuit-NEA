@@ -21,13 +21,11 @@ public class BreadthFirstSearchScript : MonoBehaviour
     public PlayerMovementScript playerMovementScript;
     public EnemyScript enemyScript;
 
-    public float enemySpeed;
+    public float solveSpeed;
     private Coroutine solveRoutine;
 
     private GameObject block;
     private SpriteRenderer spriteR;
-
-    int bfsNodesExpanded = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,7 +40,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return) == true)
         {
-            StartCoroutine(SolveMaze());
+            StartCoroutine(BreadthFirstSearch(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint));
         }
     }
 
@@ -54,13 +52,13 @@ public class BreadthFirstSearchScript : MonoBehaviour
         {
             ChangeColorRed(path[i]);
             i++;
-            yield return new WaitForSeconds(enemySpeed);
+            yield return new WaitForSeconds(solveSpeed);
         }
     }
 
     void ChangeColorRed(string point)
     {
-        block = GameObject.Find(point);
+        block = gameManagerScript.pointToObject.get(point);
 
         if (block != null)
         {
@@ -72,7 +70,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
         spriteR.color = Color.red;
     }
 
-    public void BreadthFirstSearch(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
+    public IEnumerator BreadthFirstSearch(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
     {
         cameFrom.Clear();
         visited.Clear();
@@ -89,7 +87,6 @@ public class BreadthFirstSearchScript : MonoBehaviour
         while (!Queue.isEmpty(front, rear) && currentVertex != pointToFind)
         {
             currentVertex = Queue.deQueue(queue, ref front, rear);
-            bfsNodesExpanded++;
 
             foreach (string vertex in graph[currentVertex])
             {
@@ -97,12 +94,12 @@ public class BreadthFirstSearchScript : MonoBehaviour
                 {
                     rear = Queue.enQueue(queue, rear, vertex);
                     visited.Add(vertex);
+                    ChangeColorRed(vertex);
+                    yield return new WaitForSeconds(0.1f);
                     cameFrom.Add(vertex, currentVertex);
                 }
             }
         }
-
-        Debug.Log("BFS nodes expanded: " + bfsNodesExpanded);
 
         string current = pointToFind;
 

@@ -241,8 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   square: {fileID: 605721490817169454, guid: 79a763a017a101749aa6f76458efbb37, type: 3}
-  mazeGenerationSpeed: 0.1
-  solveMazeGenerationSpeed: 0
+  mazeGenerationSpeed: 0
   levelText: {fileID: 849392517}
   gameManagerScript: {fileID: 0}
 --- !u!4 &207945823
@@ -339,6 +338,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 417741479}
   m_CullTransparentMesh: 1
+--- !u!1 &462484175
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 462484177}
+  - component: {fileID: 462484176}
+  m_Layer: 0
+  m_Name: PrimsMazeSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &462484176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462484175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 655eb317ab47b6345a8c8b5256d0d60b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  square: {fileID: 605721490817169454, guid: 79a763a017a101749aa6f76458efbb37, type: 3}
+  mazeGenerationSpeed: 0
+  levelText: {fileID: 849392517}
+  gameManagerScript: {fileID: 0}
+--- !u!4 &462484177
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462484175}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1200.2742, y: 700.06195, z: -8.141804}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &509423337
 GameObject:
   m_ObjectHideFlags: 0
@@ -952,7 +999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   square: {fileID: 605721490817169454, guid: 79a763a017a101749aa6f76458efbb37, type: 3}
-  mazeGenerationSpeed: 0.1
+  mazeGenerationSpeed: 0
   solveMazeGenerationSpeed: 0
   levelText: {fileID: 849392517}
   gameManagerScript: {fileID: 0}
@@ -1070,6 +1117,7 @@ GameObject:
   - component: {fileID: 1787580623}
   - component: {fileID: 1787580622}
   - component: {fileID: 1787580624}
+  - component: {fileID: 1787580625}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Game Manager
@@ -1096,7 +1144,10 @@ MonoBehaviour:
   winScreenActive: 0
   recursiveMazeSpawner: {fileID: 1590777565}
   iterativeMazeSpawner: {fileID: 207945821}
+  primsMazeSpawner: {fileID: 462484175}
   recursive: 0
+  iterative: 0
+  prims: 1
   mazeWidth: 3
   mazeHeight: 3
   winPoint: 
@@ -1123,7 +1174,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1787580618}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59910965e5cd0ef4ab240bdb3f29519b, type: 3}
   m_Name: 
@@ -1163,7 +1214,21 @@ MonoBehaviour:
   gameManagerScript: {fileID: 0}
   playerMovementScript: {fileID: 0}
   enemyScript: {fileID: 0}
-  enemySpeed: 0
+  solveSpeed: 0
+--- !u!114 &1787580625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787580618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbcdae93bb120b541b33dbb8154a975e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManagerScript: {fileID: 0}
+  square: {fileID: 605721490817169454, guid: 79a763a017a101749aa6f76458efbb37, type: 3}
 --- !u!1 &1916038759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1252,5 +1317,6 @@ SceneRoots:
   - {fileID: 1659555923}
   - {fileID: 1590777567}
   - {fileID: 207945823}
+  - {fileID: 462484177}
   - {fileID: 1544238962}
   - {fileID: 1541635937}

@@ -27,8 +27,11 @@ public class GameManagerScript : MonoBehaviour
 
     public GameObject recursiveMazeSpawner;
     public GameObject iterativeMazeSpawner;
+    public GameObject primsMazeSpawner;
 
     public bool recursive;
+    public bool iterative;
+    public bool prims;
 
     public static int level = 0;
     public float mazeWidth;
@@ -38,6 +41,13 @@ public class GameManagerScript : MonoBehaviour
     public bool mazeCreated = false;
 
     public Dictionary<string, List<string>> mazeGraph = new Dictionary<string, List<string>>();
+
+    public HashTableScript<string, GameObject> pointToObject;
+
+    void Awake()
+    {
+        pointToObject = new HashTableScript<string, GameObject>();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -51,9 +61,13 @@ public class GameManagerScript : MonoBehaviour
         {
             recursiveMazeSpawner.SetActive(true);
         }
-        else
+        if(iterative)
         {
             iterativeMazeSpawner.SetActive(true);
+        }
+        if (prims)
+        {
+            primsMazeSpawner.SetActive(true);
         }
 
         winScreenActive = false;
