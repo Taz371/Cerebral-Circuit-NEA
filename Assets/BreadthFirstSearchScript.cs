@@ -9,14 +9,6 @@ using System.Linq;
 
 public class BreadthFirstSearchScript : MonoBehaviour
 {
-    private Dictionary<string, string> cameFrom = new Dictionary<string, string>();
-    public List<string> path = new List<string>();
-    private List<string> visited = new List<string>();
-
-    private string[] queue = new string[Queue.MaxSize];
-    private int front = 0;
-    private int rear = -1;
-
     public GameManagerScript gameManagerScript;
     public PlayerMovementScript playerMovementScript;
     public EnemyScript enemyScript;
@@ -46,12 +38,17 @@ public class BreadthFirstSearchScript : MonoBehaviour
 
     public IEnumerator SolveMaze()
     {
-        yield return StartCoroutine(BreadthFirstSearch(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint));
+        List<string> solvedPath = new List<string>();
+
+        yield return StartCoroutine(BreadthFirstSearchAnimation(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint));
         Debug.Log("Drawing Path");
+
+        solvedPath = BreadthFirstSearch(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint);
+
         int i = 0;
-        while (i < path.Count && path[i] != gameManagerScript.winPoint)
+        while (i < solvedPath.Count && solvedPath[i] != gameManagerScript.winPoint)
         {
-            ChangeColorBlue(path[i]);
+            ChangeColorBlue(solvedPath[i]);
             i++;
             yield return new WaitForSeconds(solveSpeed);
         }
@@ -85,15 +82,15 @@ public class BreadthFirstSearchScript : MonoBehaviour
         spriteR.color = Color.blue;
     }
 
-    public IEnumerator BreadthFirstSearch(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
+    public IEnumerator BreadthFirstSearchAnimation(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
     {
-        cameFrom.Clear();
-        visited.Clear();
-        Array.Clear(queue, 0, queue.Length);
-        path.Clear();
+        Dictionary<string, string> cameFrom = new Dictionary<string, string>();
+        List<string> path = new List<string>();
+        List<string> visited = new List<string>();
 
-        front = 0;
-        rear = -1;
+        string[] queue = new string[Queue.MaxSize];
+        int front = 0;
+        int rear = -1;
 
         rear = Queue.enQueue(queue, rear, currentVertex);
         visited.Add(currentVertex);
@@ -111,6 +108,59 @@ public class BreadthFirstSearchScript : MonoBehaviour
                     visited.Add(vertex);
                     ChangeColorRed(vertex);
                     yield return new WaitForSeconds(0.1f);
+                    cameFrom.Add(vertex, currentVertex);
+                }
+            }
+        }
+        Debug.Log("FOUND");
+    }
+
+    public List<string> BreadthFirstSearch(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
+    {
+        if (graph == null)
+        {
+            Debug.LogWarning("BFS: graph is null");
+            return null;
+        }
+        if (string.IsNullOrEmpty(currentVertex))
+        {
+            Debug.LogWarning("BFS: start is null or empty");
+            return null;
+        }
+        if (string.IsNullOrEmpty(pointToFind))
+        {
+            Debug.LogWarning("BFS: goal is null or empty");
+            return null;
+        }
+        if (!graph.ContainsKey(currentVertex))
+        {
+            Debug.LogWarning($"BFS: start '{currentVertex}' not found in graph");
+            return null;
+        }
+
+
+        Dictionary<string, string> cameFrom = new Dictionary<string, string>();
+        List<string> path = new List<string>();
+        List<string> visited = new List<string>();
+
+        string[] queue = new string[Queue.MaxSize];
+        int front = 0;
+        int rear = -1;
+
+        rear = Queue.enQueue(queue, rear, currentVertex);
+        visited.Add(currentVertex);
+        cameFrom.Add("Start", null);
+
+        while (!Queue.isEmpty(front, rear) && currentVertex != pointToFind)
+        {
+            currentVertex = Queue.deQueue(queue, ref front, rear);
+
+            foreach (string vertex in graph[currentVertex])
+            {
+                if (!visited.Contains(vertex) && !Queue.Contains(queue, vertex))
+                {
+                    rear = Queue.enQueue(queue, rear, vertex);
+                    visited.Add(vertex);
                     cameFrom.Add(vertex, currentVertex);
                 }
             }
@@ -134,6 +184,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
         }
 
         path.Reverse();
+        return path;
     }
 }
 

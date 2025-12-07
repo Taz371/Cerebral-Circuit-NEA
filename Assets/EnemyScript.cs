@@ -17,8 +17,11 @@ public class EnemyScript : MonoBehaviour
     public string enemySpawnPoint;
     public string enemyPosition;
 
+    public int numberOfEnemies;
     private int numberOfEnemiesInGame = 0;
     public float enemySpeed = 0.5f;
+
+    private List<string> enemyPath = new List<string>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,46 +36,19 @@ public class EnemyScript : MonoBehaviour
     {
         if(gameManagerScript.mazeCreated == true && numberOfEnemiesInGame == 0)
         {
-            SpawnEnemy();
-            StartCoroutine(findPlayer());
-            Debug.Log("SKIB");
+            SpawnEnemy(numberOfEnemies);
         }
     }
 
-    public void MoveEnemy(string point)
+    public void SpawnEnemy(int numberOfEnemies)
     {
-        GameObject pointToMoveTo = GameObject.Find(point);
-        newEnemy.transform.position = pointToMoveTo.transform.position;
-        enemyPosition = point;
-    }
-
-    public void SpawnEnemy()
-    {
-        enemySpawnPoint = UnityEngine.Random.Range(1, (int)gameManagerScript.mazeWidth) + "," + UnityEngine.Random.Range(1, (int)gameManagerScript.mazeHeight);
-        enemyPosition = enemySpawnPoint;
-        GameObject targetObj = GameObject.Find(enemySpawnPoint);
-        newEnemy = Instantiate(enemyObj, targetObj.transform.position, targetObj.transform.rotation);
-        numberOfEnemiesInGame++;
-        newEnemy.name = $"Enemy {numberOfEnemiesInGame}";
-    }
-
-    public IEnumerator findPlayer()
-    {
-        while (true)
+        for (int i = 0; i < numberOfEnemies; i++)
         {
-            pathFindingScript.BreadthFirstSearch(gameManagerScript.mazeGraph, enemyPosition, playerMovementScript.playerPosition);
-            Debug.Log(pathFindingScript.path.Count);
-            if (pathFindingScript.path.Count > 1)
-            {
-                MoveEnemy(pathFindingScript.path[1]);
-            }
-
-            if (enemyPosition == playerMovementScript.playerPosition)
-            {
-                Debug.Log("Enemy caught the player!");
-            }
-
-            yield return new WaitForSeconds(enemySpeed);
+            enemySpawnPoint = UnityEngine.Random.Range(1, (int)gameManagerScript.mazeWidth) + "," + UnityEngine.Random.Range(1, (int)gameManagerScript.mazeHeight);
+            GameObject targetObj = GameObject.Find(enemySpawnPoint);
+            newEnemy = Instantiate(enemyObj, targetObj.transform.position, targetObj.transform.rotation);
+            numberOfEnemiesInGame++;
+            newEnemy.name = $"{enemySpawnPoint}";
         }
     }
 }

@@ -2151,6 +2151,7 @@ MonoBehaviour:
   enemyObj: {fileID: 1020212238511585481, guid: d1125d0b60f2c374b8245d3e78edb779, type: 3}
   enemySpawnPoint: 
   enemyPosition: 
+  numberOfEnemies: 2
   enemySpeed: 0.5
 --- !u!114 &1787580623
 MonoBehaviour:
@@ -2179,7 +2180,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c636a7fa0b5d9c46898ec885940a64b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: []
   gameManagerScript: {fileID: 0}
   playerMovementScript: {fileID: 0}
   enemyScript: {fileID: 0}
