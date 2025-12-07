@@ -10,7 +10,7 @@ public class RandomPrimsGenerationScript : MonoBehaviour
 {
     public GameObject square;
 
-    public float mazeGenerationSpeed;
+    private float mazeGenerationSpeed;
 
     private string point;
     private GameObject block;
@@ -42,13 +42,8 @@ public class RandomPrimsGenerationScript : MonoBehaviour
     void Start()
     {
         gameManagerScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManagerScript>();
+        mazeGenerationSpeed = gameManagerScript.mazeGenerationSpeed;
         StartCoroutine(CreateMaze());
-    }
-
-    void SetWinArea()
-    {
-        getFilling(gameManagerScript.winPoint);
-        spriteR.color = Color.green;
     }
 
     IEnumerator CreateMaze()
@@ -91,7 +86,6 @@ public class RandomPrimsGenerationScript : MonoBehaviour
             yield return new WaitForSeconds(mazeGenerationSpeed);
         }
 
-        SetWinArea();
         gameManagerScript.mazeCreated = true;
     }
 
@@ -189,11 +183,6 @@ public class RandomPrimsGenerationScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) == true)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-
         levelText.text = $"Level {GameManagerScript.level + 1}";
         ChangeColorRed("0,0");
     }

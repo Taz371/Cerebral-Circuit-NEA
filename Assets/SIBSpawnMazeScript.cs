@@ -9,7 +9,7 @@ public class SIBSpawnMazeScript : MonoBehaviour
 {
     public GameObject square;
 
-    public float mazeGenerationSpeed;
+    private float mazeGenerationSpeed;
 
     private string point;
     private GameObject block;                                                
@@ -44,13 +44,8 @@ public class SIBSpawnMazeScript : MonoBehaviour
     void Start()
     {
         gameManagerScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManagerScript>();
+        mazeGenerationSpeed = gameManagerScript.mazeGenerationSpeed;
         StartCoroutine(CreateMaze());
-    }
-
-    void SetWinArea()
-    {
-        getFilling(gameManagerScript.winPoint);
-        spriteR.color = Color.green;
     }
 
     IEnumerator CreateMaze()            
@@ -83,19 +78,19 @@ public class SIBSpawnMazeScript : MonoBehaviour
             int x = int.Parse(coords[0]);
             int y = int.Parse(coords[1]);
 
-            if (x + 1 < gameManagerScript.mazeWidth && isVisited((x + 1) + "," + y))
+            if (x + 1 < gameManagerScript.mazeWidth && visitedNodes.Contains((x + 1) + "," + y))
             {
                 possiblePaths -= 1;
             }
-            if (x - 1 >= 0 && isVisited((x - 1) + "," + y))
+            if (x - 1 >= 0 && visitedNodes.Contains((x - 1) + "," + y))
             {
                 possiblePaths -= 1;
             }
-            if (y + 1 < gameManagerScript.mazeHeight && isVisited(x + "," + (y + 1)))
+            if (y + 1 < gameManagerScript.mazeHeight && visitedNodes.Contains(x + "," + (y + 1)))
             {
                 possiblePaths -= 1;
             }
-            if (y - 1 >= 0 && isVisited(x + "," + (y - 1)))
+            if (y - 1 >= 0 && visitedNodes.Contains(x + "," + (y - 1)))
             {
                 possiblePaths -= 1;
             }
@@ -137,7 +132,6 @@ public class SIBSpawnMazeScript : MonoBehaviour
             }
         }
 
-        SetWinArea();
         gameManagerScript.mazeCreated = true;
     }
 
@@ -157,11 +151,6 @@ public class SIBSpawnMazeScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) == true)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-
         levelText.text = $"Level {GameManagerScript.level + 1}";
         ChangeColorRed("0,0");
     }
@@ -176,25 +165,6 @@ public class SIBSpawnMazeScript : MonoBehaviour
     {
         getFilling(point);
         spriteR.color = Color.white;
-    }
-
-    bool isVisited(string point)
-    {
-        if (point != "")
-        {
-            if (visitedNodes.Contains(point))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
     }
     
     void getFilling(string point)
@@ -225,7 +195,7 @@ public class SIBSpawnMazeScript : MonoBehaviour
         {
             newPoint = (x - 1) + "," + y;
 
-            if (isVisited(newPoint) == false)
+            if (!visitedNodes.Contains(newPoint))
             {
                 block = gameManagerScript.pointToObject.get(point);
                 GameObject childObj = block.transform.Find("Left Wall").gameObject;
@@ -254,7 +224,7 @@ public class SIBSpawnMazeScript : MonoBehaviour
         {
             newPoint = (x + 1) + "," + y;
 
-            if (isVisited(newPoint) == false)
+            if (!visitedNodes.Contains(newPoint))
             {
                 block = gameManagerScript.pointToObject.get(point);
                 GameObject childObj = block.transform.Find("Right Wall").gameObject;
@@ -283,7 +253,7 @@ public class SIBSpawnMazeScript : MonoBehaviour
         {
             newPoint = x + "," + (y - 1);
 
-            if (isVisited(newPoint) == false)
+            if (!visitedNodes.Contains(newPoint))
             {
                 block = gameManagerScript.pointToObject.get(point);
                 GameObject childObj = block.transform.Find("Top Wall").gameObject;
@@ -312,7 +282,7 @@ public class SIBSpawnMazeScript : MonoBehaviour
         {
             newPoint = x + "," + (y + 1);
 
-            if (isVisited(newPoint) == false)
+            if (!visitedNodes.Contains(newPoint))
             {
                 block = gameManagerScript.pointToObject.get(point);
                 GameObject childObj = block.transform.Find("Bottom Wall").gameObject;

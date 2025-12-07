@@ -38,11 +38,23 @@ public class GameManagerScript : MonoBehaviour
     public float mazeHeight;
     public string winPoint;
 
+    public Text customWidth;
+    public Text customHeight;
+
     public bool mazeCreated = false;
+
+    public float mazeGenerationSpeed;
 
     public Dictionary<string, List<string>> mazeGraph = new Dictionary<string, List<string>>();
 
     public HashTableScript<string, GameObject> pointToObject;
+
+    private static bool isCustom = false;
+    private static float customMazeWidth;
+    private static float customMazeHeight;
+
+    private GameObject block;
+    private SpriteRenderer spriteR;
 
     void Awake()
     {
@@ -52,10 +64,42 @@ public class GameManagerScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        mazeWidth += level;
-        mazeHeight += level;
+        if (!isCustom)
+        {
+            mazeWidth += level;
+            mazeHeight += level;
+        }
+        else
+        {
+            mazeWidth = customMazeWidth;
+            mazeHeight = customMazeHeight;
+        }
 
         winPoint = (mazeWidth - 1) + "," + (mazeHeight - 1);
+
+        switch (OptionsData.SelectedAlgorithm)
+        {
+            case MazeAlgorithm.Recursive:
+                recursive = true;
+                iterative = false;
+                prims = false;
+                break;
+            case MazeAlgorithm.Iterative:
+                recursive = false;
+                iterative = true;
+                prims = false;
+                break;
+            case MazeAlgorithm.Prims:
+                recursive = false;
+                iterative = false;
+                prims = true;
+                break;
+            default:
+                recursive = true;
+                iterative = false;
+                prims = false;
+                break;
+        }
 
         if (recursive)
         {
@@ -76,7 +120,10 @@ public class GameManagerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(questionRate);
+        if (Input.GetKeyDown(KeyCode.Space) == true)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
 
         if (!timerPaused)
         {
@@ -84,6 +131,11 @@ public class GameManagerScript : MonoBehaviour
             minutes = Mathf.FloorToInt(timePassed / 60);
             seconds = Mathf.FloorToInt(timePassed % 60);
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
+
+        if (mazeCreated)
+        {
+            SetWinArea();
         }
 
         timePassedClone += Time.deltaTime;
@@ -96,6 +148,7 @@ public class GameManagerScript : MonoBehaviour
         winScreen.SetActive(true);
         timerPaused = true;
         timerMessage.text = string.Format("Your time was {0:00}:{1:00}", minutes, seconds);
+        isCustom = false;
     }
 
     float[] ShuffleArray(float[] array)
@@ -109,5 +162,31 @@ public class GameManagerScript : MonoBehaviour
             shuffledArray[i] = temp;
         }
         return shuffledArray;
+    }
+
+    public void OnEnterButtonClick()
+    {
+        isCustom = true;
+
+        customMazeWidth = float.Parse(customWidth.text);
+        customMazeHeight = float.Parse(customHeight.text);
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    void getFilling(string point)
+    {
+        block = pointToObject.get(point);
+        if (block != null)
+        {
+            GameObject childObj = block.transform.Find("Filling").gameObject;
+            spriteR = childObj.GetComponent<SpriteRenderer>();
+        }
+    }
+
+    public void SetWinArea()
+    {
+        getFilling(winPoint);
+        spriteR.color = Color.green;
     }
 }

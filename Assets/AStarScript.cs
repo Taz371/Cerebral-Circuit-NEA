@@ -41,7 +41,7 @@ public class AStarScript : MonoBehaviour
 
     public IEnumerator SolveMaze()
     {
-        StartCoroutine(aStar(playerMovementScript.playerPosition, gameManagerScript.winPoint));
+        yield return StartCoroutine(aStar(playerMovementScript.playerPosition, gameManagerScript.winPoint));
         int i = 0;
         while (i < path.Count && path[i] != gameManagerScript.winPoint)
         {
@@ -53,7 +53,7 @@ public class AStarScript : MonoBehaviour
 
     void ChangeColorRed(string point)
     {
-        block = GameObject.Find(point);
+        block = gameManagerScript.pointToObject.get(point);
 
         if (block != null)
         {
@@ -67,7 +67,7 @@ public class AStarScript : MonoBehaviour
 
     void ChangeColorBlue(string point)
     {
-        block = GameObject.Find(point);
+        block = gameManagerScript.pointToObject.get(point);
 
         if (block != null)
         {

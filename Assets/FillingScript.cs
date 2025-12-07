@@ -30,7 +30,6 @@ public class FillingScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision);
         if (spriteR.color.Equals(Color.green) && collision.gameObject == playerObj)
         {
             GameManagerScript.level += 1;

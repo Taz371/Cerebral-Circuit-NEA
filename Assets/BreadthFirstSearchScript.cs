@@ -40,17 +40,18 @@ public class BreadthFirstSearchScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return) == true)
         {
-            StartCoroutine(BreadthFirstSearch(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint));
+            StartCoroutine(SolveMaze());
         }
     }
 
     public IEnumerator SolveMaze()
     {
-        BreadthFirstSearch(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint);
+        yield return StartCoroutine(BreadthFirstSearch(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint));
+        Debug.Log("Drawing Path");
         int i = 0;
         while (i < path.Count && path[i] != gameManagerScript.winPoint)
         {
-            ChangeColorRed(path[i]);
+            ChangeColorBlue(path[i]);
             i++;
             yield return new WaitForSeconds(solveSpeed);
         }
@@ -68,6 +69,20 @@ public class BreadthFirstSearchScript : MonoBehaviour
         }
 
         spriteR.color = Color.red;
+    }
+
+    void ChangeColorBlue(string point)
+    {
+        block = gameManagerScript.pointToObject.get(point);
+
+        if (block != null)
+        {
+            GameObject childObj = block.transform.Find("Filling").gameObject;
+
+            spriteR = childObj.GetComponent<SpriteRenderer>();
+        }
+
+        spriteR.color = Color.blue;
     }
 
     public IEnumerator BreadthFirstSearch(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
@@ -100,6 +115,8 @@ public class BreadthFirstSearchScript : MonoBehaviour
                 }
             }
         }
+
+        Debug.Log("FOUND");
 
         string current = pointToFind;
 

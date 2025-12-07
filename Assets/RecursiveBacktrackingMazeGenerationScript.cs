@@ -9,8 +9,7 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
 {
     public GameObject square;
 
-    public float mazeGenerationSpeed;
-    public float solveMazeGenerationSpeed;
+    private float mazeGenerationSpeed;
 
     private string point;
     private GameObject block;
@@ -32,17 +31,14 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
 
     public GameManagerScript gameManagerScript;
 
+    LinkedListScript<string> visitedNodes = new LinkedListScript<string>();
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         gameManagerScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManagerScript>();
+        mazeGenerationSpeed = gameManagerScript.mazeGenerationSpeed;
         StartCoroutine(CreateMaze());
-    }
-
-    void SetWinArea()
-    {
-        getFilling(gameManagerScript.winPoint);
-        spriteR.color = Color.green;
     }
 
     IEnumerator CreateMaze()
@@ -51,7 +47,6 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
 
         yield return StartCoroutine(GenerateMazeRecursive(startingPoint));
 
-        SetWinArea();
         gameManagerScript.mazeCreated = true;
     }
 
@@ -59,7 +54,7 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
     {
         int[] shuffledDirections = ShuffleArray(directions);
         ChangeColorRed(point);
-        ChangeLayerToVisited(point);
+        visitedNodes.AddFirst(point);
 
         for (int i = 0; i < shuffledDirections.Length; i++)
         {
@@ -91,11 +86,6 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) == true)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-
         levelText.text = $"Level {GameManagerScript.level + 1}";
         ChangeColorRed("0,0");
     }
@@ -112,35 +102,9 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
         spriteR.color = Color.white;
     }
 
-    void ChangeLayerToVisited(string point)
-    {
-        block = GameObject.Find(point);
-        block.layer = 3;
-    }
-
-    bool isVisited(string point)
-    {
-        if (point != "")
-        {
-            block = GameObject.Find(point);
-            if (block != null && block.layer == 3)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     void getFilling(string point)
     {
-        block = GameObject.Find(point);
+        block = gameManagerScript.pointToObject.get(point);
         if (block != null)
         {
             GameObject childObj = block.transform.Find("Filling").gameObject;
@@ -163,16 +127,16 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
         {
             newPoint = (x - 1) + "," + y;
 
-            if (isVisited(newPoint) == false)
+            if (!visitedNodes.Contains(newPoint))
             {
-                block = GameObject.Find(point);
+                block = gameManagerScript.pointToObject.get(point);
                 GameObject childObj = block.transform.Find("Left Wall").gameObject;
                 if (childObj != null)
                 {
                     Destroy(childObj);
                 }
 
-                GameObject adjacentBlock = GameObject.Find(newPoint);
+                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
                 childObj = adjacentBlock.transform.Find("Right Wall").gameObject;
                 if (childObj != null)
                 {
@@ -192,16 +156,16 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
         {
             newPoint = (x + 1) + "," + y;
 
-            if (isVisited(newPoint) == false)
+            if (!visitedNodes.Contains(newPoint))
             {
-                block = GameObject.Find(point);
+                block = gameManagerScript.pointToObject.get(point);
                 GameObject childObj = block.transform.Find("Right Wall").gameObject;
                 if (childObj != null)
                 {
                     Destroy(childObj);
                 }
 
-                GameObject adjacentBlock = GameObject.Find(newPoint);
+                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
                 childObj = adjacentBlock.transform.Find("Left Wall").gameObject;
                 if (childObj != null)
                 {
@@ -221,16 +185,16 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
         {
             newPoint = x + "," + (y - 1);
 
-            if (isVisited(newPoint) == false)
+            if (!visitedNodes.Contains(newPoint))
             {
-                block = GameObject.Find(point);
+                block = gameManagerScript.pointToObject.get(point);
                 GameObject childObj = block.transform.Find("Top Wall").gameObject;
                 if (childObj != null)
                 {
                     Destroy(childObj);
                 }
 
-                GameObject adjacentBlock = GameObject.Find(newPoint);
+                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
                 childObj = adjacentBlock.transform.Find("Bottom Wall").gameObject;
                 if (childObj != null)
                 {
@@ -250,16 +214,16 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
         {
             newPoint = x + "," + (y + 1);
 
-            if (isVisited(newPoint) == false)
+            if (!visitedNodes.Contains(newPoint))
             {
-                block = GameObject.Find(point);
+                block = gameManagerScript.pointToObject.get(point);
                 GameObject childObj = block.transform.Find("Bottom Wall").gameObject;
                 if (childObj != null)
                 {
                     Destroy(childObj);
                 }
 
-                GameObject adjacentBlock = GameObject.Find(newPoint);
+                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
                 childObj = adjacentBlock.transform.Find("Top Wall").gameObject;
                 if (childObj != null)
                 {
