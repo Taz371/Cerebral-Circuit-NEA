@@ -38,7 +38,6 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
     void Start()
     {
         gameManagerScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManagerScript>();
-        mazeGenerationSpeed = gameManagerScript.mazeGenerationSpeed;
         StartCoroutine(CreateMaze());
     }
 
@@ -63,13 +62,13 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
             string nextPoint = gameManagerScript.RemoveWall(point, shuffledDirections[i], visitedNodes);
             if (nextPoint != "")
             {
-                yield return new WaitForSeconds(mazeGenerationSpeed);
+                yield return new WaitForSeconds(gameManagerScript.mazeGenerationSpeed);
                 yield return StartCoroutine(GenerateMazeRecursive(nextPoint));
             }
         }
 
         gameManagerScript.ChangeColorWhite(point);
-        yield return new WaitForSeconds(mazeGenerationSpeed);
+        yield return new WaitForSeconds(gameManagerScript.mazeGenerationSpeed);
     }
 
     int[] ShuffleArray(int[] array)

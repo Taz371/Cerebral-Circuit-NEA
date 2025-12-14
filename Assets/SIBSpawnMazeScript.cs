@@ -48,7 +48,6 @@ public class SIBSpawnMazeScript : MonoBehaviour
     void Start()
     {
         gameManagerScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManagerScript>();
-        mazeGenerationSpeed = gameManagerScript.mazeGenerationSpeed;
         StartCoroutine(CreateMaze());
     }
 
@@ -113,7 +112,7 @@ public class SIBSpawnMazeScript : MonoBehaviour
                 nextPoint = Stack.pop(ref top, stack);
                 gameManagerScript.ChangeColorWhite(nextPoint);
                 visitedNodes.AddFirst(nextPoint);
-                yield return new WaitForSeconds(mazeGenerationSpeed);
+                yield return new WaitForSeconds(gameManagerScript.mazeGenerationSpeed);
             }
             else
             {
@@ -127,7 +126,7 @@ public class SIBSpawnMazeScript : MonoBehaviour
                     string currentPoint = gameManagerScript.RemoveWall(nextPoint, shuffledDirections[i], visitedNodes);
                     if (currentPoint != "")
                     {
-                        yield return new WaitForSeconds(mazeGenerationSpeed);
+                        yield return new WaitForSeconds(gameManagerScript.mazeGenerationSpeed);
                         gameManagerScript.ChangeColorRed(currentPoint);
                         visitedNodes.AddFirst(currentPoint);
                         Stack.push(ref top, stack, currentPoint);
@@ -142,7 +141,7 @@ public class SIBSpawnMazeScript : MonoBehaviour
                 {
                     nextPoint = Stack.pop(ref top, stack);
                     gameManagerScript.ChangeColorWhite(nextPoint);
-                    yield return new WaitForSeconds(mazeGenerationSpeed);
+                    yield return new WaitForSeconds(gameManagerScript.mazeGenerationSpeed);
                 }
             }
         }

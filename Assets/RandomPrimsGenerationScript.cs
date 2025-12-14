@@ -43,7 +43,6 @@ public class RandomPrimsGenerationScript : MonoBehaviour
     void Start()
     {
         gameManagerScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManagerScript>();
-        mazeGenerationSpeed = gameManagerScript.mazeGenerationSpeed;
         StartCoroutine(CreateMaze());
     }
 
@@ -56,7 +55,7 @@ public class RandomPrimsGenerationScript : MonoBehaviour
         Mark(startingPoint);
         gameManagerScript.ChangeColorRed(startingPoint);
 
-        yield return new WaitForSeconds(mazeGenerationSpeed);
+        yield return new WaitForSeconds(gameManagerScript.mazeGenerationSpeed);
         gameManagerScript.ChangeColorWhite(startingPoint);
 
         // While the frontier list has walls(cells) in it
@@ -93,7 +92,7 @@ public class RandomPrimsGenerationScript : MonoBehaviour
 
             // Mark this cell as IN and add its walls to the frontier
             Mark(randomFrontier);
-            yield return new WaitForSeconds(mazeGenerationSpeed);
+            yield return new WaitForSeconds(gameManagerScript.mazeGenerationSpeed);
         }
 
         // Maze is fully generated when frontier is empty

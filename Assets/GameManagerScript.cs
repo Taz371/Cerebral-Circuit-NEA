@@ -46,6 +46,8 @@ public class GameManagerScript : MonoBehaviour
     public Text customEnemies;
 
     public Text typeOfMaze;
+    public Slider mazeSpeedSlider;
+    public Text mazeSpeedIndicator;
 
     private string newPoint;
 
@@ -74,6 +76,12 @@ public class GameManagerScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // Keep slider value after reload
+        if (PlayerPrefs.HasKey("MazeSpeed"))
+        {
+            mazeSpeedSlider.value = PlayerPrefs.GetFloat("MazeSpeed");
+        }
+
         // Set maze size based on level or custom input
         if (!isCustom)
         {
@@ -161,6 +169,27 @@ public class GameManagerScript : MonoBehaviour
 
         timePassedClone += Time.deltaTime;
         secondsClone = Mathf.FloorToInt(timePassedClone % 60);
+
+        mazeGenerationSpeed = mazeSpeedSlider.value;
+        PlayerPrefs.SetFloat("MazeSpeed", mazeSpeedSlider.value);
+
+        // Slider logic
+        if (mazeSpeedSlider.value >= 0.33 && mazeSpeedSlider.value <= 0.67)
+        {
+            mazeSpeedIndicator.text = "Maze Speed: Medium";
+        }
+        else if (mazeSpeedSlider.value > 0.67)
+        {
+            mazeSpeedIndicator.text = "Maze Speed: Slow";
+        }
+        else if (mazeSpeedSlider.value < 0.33 && mazeSpeedSlider.value > 0)
+        {
+            mazeSpeedIndicator.text = "Maze Speed: Fast";
+        }
+        else if (mazeSpeedSlider.value == 0)
+        {
+            mazeSpeedIndicator.text = "Maze Speed: Super Fast";
+        }
     }
 
     public void win()
