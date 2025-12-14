@@ -82,4 +82,22 @@ public class HashTableScript<T1,T2>
 
         return false;
     }
+
+    public void Remove(T1 key)
+    {
+        int index = HashValue(key);
+        var keyValuePair = keyValuePairs[index];
+
+        for (int i = 0; i < keyValuePair.count; i++)
+        {
+            var keyValue = keyValuePair[i];
+
+            if (EqualityComparer<T1>.Default.Equals(keyValue.Item1, key))
+            {
+                keyValuePair.RemoveValue(keyValue);
+                count--;
+            }
+        }
+    }
+
 }

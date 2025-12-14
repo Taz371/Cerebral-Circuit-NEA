@@ -41,10 +41,10 @@ public class BreadthFirstSearchScript : MonoBehaviour
         //List<string> solvedPath = new List<string>();
         LinkedListScript<string> solvedPath = new LinkedListScript<string>();
 
-        yield return StartCoroutine(BreadthFirstSearchAnimation(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint));
+        yield return StartCoroutine(BreadthFirstSearchAnimation(playerMovementScript.playerPosition, gameManagerScript.winPoint));
         Debug.Log("Drawing Path");
 
-        solvedPath = BreadthFirstSearch(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint);
+        solvedPath = BreadthFirstSearch(playerMovementScript.playerPosition, gameManagerScript.winPoint);
 
         int i = 0;
         while (i < solvedPath.count && solvedPath[i] != gameManagerScript.winPoint)
@@ -83,8 +83,11 @@ public class BreadthFirstSearchScript : MonoBehaviour
         spriteR.color = Color.blue;
     }
 
-    public IEnumerator BreadthFirstSearchAnimation(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
+    public IEnumerator BreadthFirstSearchAnimation(string currentVertex, string pointToFind)
     {
+        HashTableScript<string, LinkedListScript<string>> graph = new HashTableScript<string, LinkedListScript<string>>();
+        graph = gameManagerScript.mazeGraph;
+
         HashTableScript<string, string> cameFrom = new HashTableScript<string, string>();
         LinkedListScript<string> visited = new LinkedListScript<string>();
 
@@ -100,7 +103,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
         {
             currentVertex = Queue.deQueue(queue, ref front, rear);
 
-            foreach (string vertex in graph[currentVertex])
+            foreach (string vertex in graph.get(currentVertex).AsEnumerable())
             {
                 if (!visited.Contains(vertex) && !Queue.Contains(queue, vertex))
                 {
@@ -115,8 +118,11 @@ public class BreadthFirstSearchScript : MonoBehaviour
         Debug.Log("FOUND");
     }
 
-    public LinkedListScript<string> BreadthFirstSearch(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
+    public LinkedListScript<string> BreadthFirstSearch(string currentVertex, string pointToFind)
     {
+        HashTableScript<string, LinkedListScript<string>> graph = new HashTableScript<string, LinkedListScript<string>>();
+        graph = gameManagerScript.mazeGraph;
+
         if (graph == null)
         {
             Debug.LogWarning("BFS: graph is null");
@@ -154,7 +160,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
         {
             currentVertex = Queue.deQueue(queue, ref front, rear);
 
-            foreach (string vertex in graph[currentVertex])
+            foreach (string vertex in graph.get(currentVertex).AsEnumerable())
             {
                 if (!visited.Contains(vertex) && !Queue.Contains(queue, vertex))
                 {

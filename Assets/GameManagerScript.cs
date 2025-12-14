@@ -48,7 +48,8 @@ public class GameManagerScript : MonoBehaviour
 
     public float mazeGenerationSpeed;
 
-    public Dictionary<string, List<string>> mazeGraph = new Dictionary<string, List<string>>();
+    //public Dictionary<string, List<string>> mazeGraph = new Dictionary<string, List<string>>();
+    public HashTableScript<string, LinkedListScript<string>> mazeGraph = new HashTableScript<string, LinkedListScript<string>>();
 
     public HashTableScript<string, GameObject> pointToObject;
 

@@ -53,7 +53,7 @@ public class EnemyObjectScript : MonoBehaviour
     {
         while (true)
         {
-            enemyPath = pathFindingScript.BreadthFirstSearch(gameManagerScript.mazeGraph, enemyPosition, playerMovementScript.playerPosition);
+            enemyPath = pathFindingScript.BreadthFirstSearch(enemyPosition, playerMovementScript.playerPosition);
             Debug.Log(enemyPath.count);
             if (enemyPath.count > 1)
             {

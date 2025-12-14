@@ -233,4 +233,14 @@ public class LinkedListScript<T>
         int randomIndex = UnityEngine.Random.Range(0, count);
         return this[randomIndex];
     }
+
+    public IEnumerable<T> AsEnumerable()
+    {
+        Node current = head;
+        while (current != null)
+        {
+            yield return current.value;
+            current = current.next;
+        }
+    }
 }

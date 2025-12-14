@@ -249,33 +249,33 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
     {
         if (!gameManagerScript.mazeGraph.ContainsKey(point))
         {
-            gameManagerScript.mazeGraph.Add(point, new List<string>());
-            if (!gameManagerScript.mazeGraph[point].Contains(newPoint))
+            gameManagerScript.mazeGraph.Put(point, new LinkedListScript<string>());
+            if (!gameManagerScript.mazeGraph.get(point).Contains(newPoint))
             {
-                gameManagerScript.mazeGraph[point].Add(newPoint);
+                gameManagerScript.mazeGraph.get(point).AddLast(newPoint);
             }
         }
         else
         {
-            if (!gameManagerScript.mazeGraph[point].Contains(newPoint))
+            if (!gameManagerScript.mazeGraph.get(point).Contains(newPoint))
             {
-                gameManagerScript.mazeGraph[point].Add(newPoint);
+                gameManagerScript.mazeGraph.get(point).AddLast(newPoint);
             }
         }
 
         if (!gameManagerScript.mazeGraph.ContainsKey(newPoint))
         {
-            gameManagerScript.mazeGraph.Add(newPoint, new List<string>());
-            if (!gameManagerScript.mazeGraph[newPoint].Contains(point))
+            gameManagerScript.mazeGraph.Put(newPoint, new LinkedListScript<string>());
+            if (!gameManagerScript.mazeGraph.get(newPoint).Contains(point))
             {
-                gameManagerScript.mazeGraph[newPoint].Add(point);
+                gameManagerScript.mazeGraph.get(newPoint).AddLast(point);
             }
         }
         else
         {
-            if (!gameManagerScript.mazeGraph[newPoint].Contains(point))
+            if (!gameManagerScript.mazeGraph.get(newPoint).Contains(point))
             {
-                gameManagerScript.mazeGraph[newPoint].Add(point);
+                gameManagerScript.mazeGraph.get(newPoint).AddLast(point);
             }
         }
     }

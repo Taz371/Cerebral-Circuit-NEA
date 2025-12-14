@@ -10,10 +10,11 @@ using System.Linq;
 public class AStarScript : MonoBehaviour
 {
     List<(float fValue, string node)> openList = new List<(float, string)>();
+
     HashTableScript<string, string> cameFrom = new HashTableScript<string, string>();
     LinkedListScript<string> path = new LinkedListScript<string>();
 
-    List<string> walkableNeighbours = new List<string>();
+    LinkedListScript<string> walkableNeighbours = new LinkedListScript<string>();
 
     public GameManagerScript gameManagerScript;
     public PlayerMovementScript playerMovementScript;
@@ -85,6 +86,7 @@ public class AStarScript : MonoBehaviour
         int targetY = int.Parse(targetCoords[1]);
 
         Dictionary<string, float> gScore = new Dictionary<string, float>();
+        //HashTableScript<string, float> gScore = new HashTableScript<string, float>();
         gScore[startPos] = 0;
 
         openList.Add((0, startPos));
@@ -108,9 +110,9 @@ public class AStarScript : MonoBehaviour
             {
                 openList.Remove(minItem);
 
-                walkableNeighbours = gameManagerScript.mazeGraph[minItem.node];
+                walkableNeighbours = gameManagerScript.mazeGraph.get(minItem.node);
 
-                foreach (string neighbour in walkableNeighbours)
+                foreach (string neighbour in walkableNeighbours.AsEnumerable())
                 {
                     string[] nodeCoords = neighbour.Split(',');
 
@@ -123,7 +125,8 @@ public class AStarScript : MonoBehaviour
                     {
                         gScore[neighbour] = tentativeG;
 
-                        float h = (float)Math.Sqrt(Math.Pow(targetX - nodeX, 2) + Math.Pow(targetY - nodeY, 2));
+                        //float h = (float)Math.Sqrt(Math.Pow(targetX - nodeX, 2) + Math.Pow(targetY - nodeY, 2));
+                        float h = Math.Abs(targetX - nodeX) + Math.Abs(targetY - nodeY);
 
                         float f = tentativeG + h;
 

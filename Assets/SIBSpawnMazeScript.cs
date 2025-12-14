@@ -313,7 +313,7 @@ public class SIBSpawnMazeScript : MonoBehaviour
         }
     }
 
-    void AddToGraph(string point, string newPoint)
+    /*void AddToGraph(string point, string newPoint)
     {
         if (!gameManagerScript.mazeGraph.ContainsKey(point))
         {
@@ -344,6 +344,41 @@ public class SIBSpawnMazeScript : MonoBehaviour
             if (!gameManagerScript.mazeGraph[newPoint].Contains(point))
             {
                 gameManagerScript.mazeGraph[newPoint].Add(point);
+            }
+        }
+    }*/
+
+    void AddToGraph(string point, string newPoint)
+    {
+        if (!gameManagerScript.mazeGraph.ContainsKey(point))
+        {
+            gameManagerScript.mazeGraph.Put(point, new LinkedListScript<string>());
+            if (!gameManagerScript.mazeGraph.get(point).Contains(newPoint))
+            {
+                gameManagerScript.mazeGraph.get(point).AddLast(newPoint);
+            }
+        }
+        else
+        {
+            if (!gameManagerScript.mazeGraph.get(point).Contains(newPoint))
+            {
+                gameManagerScript.mazeGraph.get(point).AddLast(newPoint);
+            }
+        }
+
+        if (!gameManagerScript.mazeGraph.ContainsKey(newPoint))
+        {
+            gameManagerScript.mazeGraph.Put(newPoint, new LinkedListScript<string>());
+            if (!gameManagerScript.mazeGraph.get(newPoint).Contains(point))
+            {
+                gameManagerScript.mazeGraph.get(newPoint).AddLast(point);
+            }
+        }
+        else
+        {
+            if (!gameManagerScript.mazeGraph.get(newPoint).Contains(point))
+            {
+                gameManagerScript.mazeGraph.get(newPoint).AddLast(point);
             }
         }
     }
