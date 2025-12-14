@@ -137,7 +137,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7917ab745e4419e4ca9cd2b703657667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyObj: {fileID: 0}
-  enemySpawnPoint: 
   enemyPosition: 
   enemySpeed: 0.5
+  Player: {fileID: 1280439201309515456, guid: a52e814bd76d8aa47a82dcb6f922e1b6, type: 3}

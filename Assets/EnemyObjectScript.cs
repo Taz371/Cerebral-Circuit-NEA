@@ -13,9 +13,10 @@ public class EnemyObjectScript : MonoBehaviour
 
     public string enemyPosition;
 
-    public float enemySpeed = 0.5f;
+    private float enemySpeed = 0.5f;
 
-    private List<string> enemyPath = new List<string>();
+    //private List<string> enemyPath = new List<string>();
+    LinkedListScript<string> enemyPath = new LinkedListScript<string>();
 
     private bool initiated;
 
@@ -53,8 +54,8 @@ public class EnemyObjectScript : MonoBehaviour
         while (true)
         {
             enemyPath = pathFindingScript.BreadthFirstSearch(gameManagerScript.mazeGraph, enemyPosition, playerMovementScript.playerPosition);
-            Debug.Log(enemyPath.Count);
-            if (enemyPath.Count > 1)
+            Debug.Log(enemyPath.count);
+            if (enemyPath.count > 1)
             {
                 MoveEnemy(enemyPath[1]);
             }
@@ -62,6 +63,8 @@ public class EnemyObjectScript : MonoBehaviour
             if (enemyPosition == playerMovementScript.playerPosition)
             {
                 Debug.Log("Enemy caught the player!");
+                gameManagerScript.deathScreen.SetActive(true);
+                gameManagerScript.deathScreenActive = true;
             }
 
             yield return new WaitForSeconds(enemySpeed);

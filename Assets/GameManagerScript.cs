@@ -21,9 +21,11 @@ public class GameManagerScript : MonoBehaviour
     private float answer;
 
     public GameObject winScreen;
+    public GameObject deathScreen;
     public Text timerMessage;
 
     public bool winScreenActive = false;
+    public bool deathScreenActive = false;
 
     public GameObject recursiveMazeSpawner;
     public GameObject iterativeMazeSpawner;
@@ -40,6 +42,7 @@ public class GameManagerScript : MonoBehaviour
 
     public Text customWidth;
     public Text customHeight;
+    public Text customEnemies;
 
     public bool mazeCreated = false;
 
@@ -52,6 +55,8 @@ public class GameManagerScript : MonoBehaviour
     private static bool isCustom = false;
     private static float customMazeWidth;
     private static float customMazeHeight;
+
+    public static int numberOfEnemies = 0;
 
     private GameObject block;
     private SpriteRenderer spriteR;
@@ -115,6 +120,7 @@ public class GameManagerScript : MonoBehaviour
         }
 
         winScreenActive = false;
+        deathScreenActive = false;
     }
 
     // Update is called once per frame
@@ -166,12 +172,25 @@ public class GameManagerScript : MonoBehaviour
 
     public void OnEnterButtonClick()
     {
-        isCustom = true;
+        try
+        {
+            isCustom = true;
 
-        customMazeWidth = float.Parse(customWidth.text);
-        customMazeHeight = float.Parse(customHeight.text);
+            if ((float.Parse(customWidth.text) == 1 || float.Parse(customHeight.text) == 1) && int.Parse(customEnemies.text) > 0)
+            {
+                throw new ArgumentException("Please supply at least one argument.");
+            }
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            customMazeWidth = float.Parse(customWidth.text);
+            customMazeHeight = float.Parse(customHeight.text);
+            numberOfEnemies = int.Parse(customEnemies.text);
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Invalid Input");
+        }
     }
 
     void getFilling(string point)

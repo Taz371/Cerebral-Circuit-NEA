@@ -17,9 +17,7 @@ public class EnemyScript : MonoBehaviour
     public string enemySpawnPoint;
     public string enemyPosition;
 
-    public int numberOfEnemies;
     private int numberOfEnemiesInGame = 0;
-    public float enemySpeed = 0.5f;
 
     private List<string> enemyPath = new List<string>();
 
@@ -36,7 +34,7 @@ public class EnemyScript : MonoBehaviour
     {
         if(gameManagerScript.mazeCreated == true && numberOfEnemiesInGame == 0)
         {
-            SpawnEnemy(numberOfEnemies);
+            SpawnEnemy(GameManagerScript.numberOfEnemies);
         }
     }
 

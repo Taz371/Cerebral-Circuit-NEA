@@ -10,10 +10,8 @@ using System.Linq;
 public class AStarScript : MonoBehaviour
 {
     List<(float fValue, string node)> openList = new List<(float, string)>();
-    List<(float fValue, string node)> closedList = new List<(float, string)>();
-    Dictionary<string, string> cameFrom = new Dictionary<string, string>();
-    public List<string> path = new List<string>();
-
+    HashTableScript<string, string> cameFrom = new HashTableScript<string, string>();
+    LinkedListScript<string> path = new LinkedListScript<string>();
 
     List<string> walkableNeighbours = new List<string>();
 
@@ -43,7 +41,7 @@ public class AStarScript : MonoBehaviour
     {
         yield return StartCoroutine(aStar(playerMovementScript.playerPosition, gameManagerScript.winPoint));
         int i = 0;
-        while (i < path.Count && path[i] != gameManagerScript.winPoint)
+        while (i < path.count && path[i] != gameManagerScript.winPoint)
         {
             ChangeColorBlue(path[i]);
             i++;
@@ -109,7 +107,6 @@ public class AStarScript : MonoBehaviour
             else
             {
                 openList.Remove(minItem);
-                closedList.Add(minItem);
 
                 walkableNeighbours = gameManagerScript.mazeGraph[minItem.node];
 
@@ -135,7 +132,7 @@ public class AStarScript : MonoBehaviour
                             openList.Add((f, neighbour));
                         }
 
-                        cameFrom[neighbour] = minItem.node;
+                        cameFrom.Put(neighbour, minItem.node);
                     }
                 }
             }
@@ -145,17 +142,15 @@ public class AStarScript : MonoBehaviour
 
         while (current != null)
         {
-            path.Add(current);
+            path.AddFirst(current);
             if (cameFrom.ContainsKey(current))
             {
-                current = cameFrom[current];
+                current = cameFrom.get(current);
             }
             else
             {
                 current = null;
             }
         }
-
-        path.Reverse();
     }
 }

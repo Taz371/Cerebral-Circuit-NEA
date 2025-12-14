@@ -38,7 +38,8 @@ public class BreadthFirstSearchScript : MonoBehaviour
 
     public IEnumerator SolveMaze()
     {
-        List<string> solvedPath = new List<string>();
+        //List<string> solvedPath = new List<string>();
+        LinkedListScript<string> solvedPath = new LinkedListScript<string>();
 
         yield return StartCoroutine(BreadthFirstSearchAnimation(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint));
         Debug.Log("Drawing Path");
@@ -46,7 +47,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
         solvedPath = BreadthFirstSearch(gameManagerScript.mazeGraph, playerMovementScript.playerPosition, gameManagerScript.winPoint);
 
         int i = 0;
-        while (i < solvedPath.Count && solvedPath[i] != gameManagerScript.winPoint)
+        while (i < solvedPath.count && solvedPath[i] != gameManagerScript.winPoint)
         {
             ChangeColorBlue(solvedPath[i]);
             i++;
@@ -84,17 +85,16 @@ public class BreadthFirstSearchScript : MonoBehaviour
 
     public IEnumerator BreadthFirstSearchAnimation(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
     {
-        Dictionary<string, string> cameFrom = new Dictionary<string, string>();
-        List<string> path = new List<string>();
-        List<string> visited = new List<string>();
+        HashTableScript<string, string> cameFrom = new HashTableScript<string, string>();
+        LinkedListScript<string> visited = new LinkedListScript<string>();
 
         string[] queue = new string[Queue.MaxSize];
         int front = 0;
         int rear = -1;
 
         rear = Queue.enQueue(queue, rear, currentVertex);
-        visited.Add(currentVertex);
-        cameFrom.Add("Start", null);
+        visited.AddFirst(currentVertex);
+        cameFrom.Put("Start", null);
 
         while (!Queue.isEmpty(front, rear) && currentVertex != pointToFind)
         {
@@ -105,17 +105,17 @@ public class BreadthFirstSearchScript : MonoBehaviour
                 if (!visited.Contains(vertex) && !Queue.Contains(queue, vertex))
                 {
                     rear = Queue.enQueue(queue, rear, vertex);
-                    visited.Add(vertex);
+                    visited.AddFirst(vertex);
                     ChangeColorRed(vertex);
                     yield return new WaitForSeconds(0.1f);
-                    cameFrom.Add(vertex, currentVertex);
+                    cameFrom.Put(vertex, currentVertex);
                 }
             }
         }
         Debug.Log("FOUND");
     }
 
-    public List<string> BreadthFirstSearch(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
+    public LinkedListScript<string> BreadthFirstSearch(Dictionary<string, List<string>> graph, string currentVertex, string pointToFind)
     {
         if (graph == null)
         {
@@ -138,18 +138,17 @@ public class BreadthFirstSearchScript : MonoBehaviour
             return null;
         }
 
-
-        Dictionary<string, string> cameFrom = new Dictionary<string, string>();
-        List<string> path = new List<string>();
-        List<string> visited = new List<string>();
+        HashTableScript<string, string> cameFrom = new HashTableScript<string, string>();
+        LinkedListScript<string> path = new LinkedListScript<string>();
+        LinkedListScript<string> visited = new LinkedListScript<string>();
 
         string[] queue = new string[Queue.MaxSize];
         int front = 0;
         int rear = -1;
 
         rear = Queue.enQueue(queue, rear, currentVertex);
-        visited.Add(currentVertex);
-        cameFrom.Add("Start", null);
+        visited.AddFirst(currentVertex);
+        cameFrom.Put("Start", null);
 
         while (!Queue.isEmpty(front, rear) && currentVertex != pointToFind)
         {
@@ -160,8 +159,8 @@ public class BreadthFirstSearchScript : MonoBehaviour
                 if (!visited.Contains(vertex) && !Queue.Contains(queue, vertex))
                 {
                     rear = Queue.enQueue(queue, rear, vertex);
-                    visited.Add(vertex);
-                    cameFrom.Add(vertex, currentVertex);
+                    visited.AddFirst(vertex);
+                    cameFrom.Put(vertex, currentVertex);
                 }
             }
         }
@@ -172,10 +171,10 @@ public class BreadthFirstSearchScript : MonoBehaviour
 
         while (current != null)
         {
-            path.Add(current);
+            path.AddFirst(current);
             if (cameFrom.ContainsKey(current))
             {
-                current = cameFrom[current];
+                current = cameFrom.get(current);
             }
             else
             {
@@ -183,7 +182,6 @@ public class BreadthFirstSearchScript : MonoBehaviour
             }
         }
 
-        path.Reverse();
         return path;
     }
 }
