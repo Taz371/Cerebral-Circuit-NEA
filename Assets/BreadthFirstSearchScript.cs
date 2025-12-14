@@ -13,7 +13,8 @@ public class BreadthFirstSearchScript : MonoBehaviour
     public PlayerMovementScript playerMovementScript;
     public EnemyScript enemyScript;
 
-    public float solveSpeed;
+    // Delay between showing each step of the solution
+    public float solveSpeed; 
     private Coroutine solveRoutine;
 
     private GameObject block;
@@ -30,6 +31,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Start BFS maze solve visualization when Enter is pressed
         if (Input.GetKeyDown(KeyCode.Return) == true)
         {
             StartCoroutine(SolveMaze());
@@ -38,49 +40,22 @@ public class BreadthFirstSearchScript : MonoBehaviour
 
     public IEnumerator SolveMaze()
     {
-        //List<string> solvedPath = new List<string>();
         LinkedListScript<string> solvedPath = new LinkedListScript<string>();
 
+        // First animate the BFS search
         yield return StartCoroutine(BreadthFirstSearchAnimation(playerMovementScript.playerPosition, gameManagerScript.winPoint));
-        Debug.Log("Drawing Path");
 
+        // Get the final BFS path from start to goal
         solvedPath = BreadthFirstSearch(playerMovementScript.playerPosition, gameManagerScript.winPoint);
 
+        // Animate the path by coloring the cells blue
         int i = 0;
         while (i < solvedPath.count && solvedPath[i] != gameManagerScript.winPoint)
         {
-            ChangeColorBlue(solvedPath[i]);
+            gameManagerScript.ChangeColorBlue(solvedPath[i]);
             i++;
             yield return new WaitForSeconds(solveSpeed);
         }
-    }
-
-    void ChangeColorRed(string point)
-    {
-        block = gameManagerScript.pointToObject.get(point);
-
-        if (block != null)
-        {
-            GameObject childObj = block.transform.Find("Filling").gameObject;
-
-            spriteR = childObj.GetComponent<SpriteRenderer>();
-        }
-
-        spriteR.color = Color.red;
-    }
-
-    void ChangeColorBlue(string point)
-    {
-        block = gameManagerScript.pointToObject.get(point);
-
-        if (block != null)
-        {
-            GameObject childObj = block.transform.Find("Filling").gameObject;
-
-            spriteR = childObj.GetComponent<SpriteRenderer>();
-        }
-
-        spriteR.color = Color.blue;
     }
 
     public IEnumerator BreadthFirstSearchAnimation(string currentVertex, string pointToFind)
@@ -109,13 +84,12 @@ public class BreadthFirstSearchScript : MonoBehaviour
                 {
                     rear = Queue.enQueue(queue, rear, vertex);
                     visited.AddFirst(vertex);
-                    ChangeColorRed(vertex);
+                    gameManagerScript.ChangeColorRed(vertex);
                     yield return new WaitForSeconds(0.1f);
                     cameFrom.Put(vertex, currentVertex);
                 }
             }
         }
-        Debug.Log("FOUND");
     }
 
     public LinkedListScript<string> BreadthFirstSearch(string currentVertex, string pointToFind)
@@ -171,8 +145,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
             }
         }
 
-        Debug.Log("FOUND");
-
+        // Reconstruct path from goal to start using cameFrom
         string current = pointToFind;
 
         while (current != null)
@@ -192,6 +165,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
     }
 }
 
+// Custom queue implementation used for BFS
 internal class Queue
 {
     public const int MaxSize = 300000;

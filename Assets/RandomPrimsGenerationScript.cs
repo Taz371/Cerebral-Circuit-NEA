@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 
-
+// Generates a maze using a randomized version of Prim's algorithm
 public class RandomPrimsGenerationScript : MonoBehaviour
 {
     public GameObject square;
@@ -34,6 +34,7 @@ public class RandomPrimsGenerationScript : MonoBehaviour
 
     public GameManagerScript gameManagerScript;
 
+    // Frontier cells (on the edge of the maze) and neighbours for connection
     LinkedListScript<string> frontier= new LinkedListScript<string>();
     LinkedListScript<string> neighbours = new LinkedListScript<string>();
     HashTableScript<string, string> pointInOrOut = new HashTableScript<string, string>();
@@ -48,31 +49,39 @@ public class RandomPrimsGenerationScript : MonoBehaviour
 
     IEnumerator CreateMaze()
     {
+        // Choose a random starting cell and mark it as part of the maze
         startingPoint = UnityEngine.Random.Range(0, (int)gameManagerScript.mazeWidth) + "," + UnityEngine.Random.Range(0, (int)gameManagerScript.mazeHeight);
+
+        // Add surrounding walls to the frontier
         Mark(startingPoint);
-        ChangeColorRed(startingPoint);
+        gameManagerScript.ChangeColorRed(startingPoint);
 
         yield return new WaitForSeconds(mazeGenerationSpeed);
-        ChangeColorWhite(startingPoint);
+        gameManagerScript.ChangeColorWhite(startingPoint);
 
+        // While the frontier list has walls(cells) in it
         while (frontier.count != 0)
         {
+            // Pick a random cell from the frontier
             string randomFrontier = frontier.GetRandom();
             frontier.RemoveValue(randomFrontier);
-            ChangeColorWhite(randomFrontier);
+            gameManagerScript.ChangeColorWhite(randomFrontier);
             string[] fcoords = randomFrontier.Split(',');
 
             int fx = int.Parse(fcoords[0]);
             int fy = int.Parse(fcoords[1]);
 
+            // Determine neighbours of this frontier cell that are IN
             Neighbours(fx, fy);
 
+            // If no neighbouring IN cells, skip this cell
             if (neighbours.count == 0)
             {
                 frontier.RemoveValue(randomFrontier);
                 continue;
             }
 
+            // Pick a random neighbour that is already IN and remove wall
             string randomNeighbour = neighbours.GetRandom();
             string[] ncoords = randomNeighbour.Split(',');
 
@@ -82,13 +91,16 @@ public class RandomPrimsGenerationScript : MonoBehaviour
             int direction = Direction(fx, fy, nx, ny);
             RemoveWall(randomFrontier, direction);
 
+            // Mark this cell as IN and add its walls to the frontier
             Mark(randomFrontier);
             yield return new WaitForSeconds(mazeGenerationSpeed);
         }
 
+        // Maze is fully generated when frontier is empty
         gameManagerScript.mazeCreated = true;
     }
 
+    // Adds a cell to the frontier if it's valid
     private void AddFrontier(int x, int y)
     {
         if (x >= 0 && y >= 0 && y < gameManagerScript.mazeHeight && x < gameManagerScript.mazeWidth)
@@ -105,10 +117,11 @@ public class RandomPrimsGenerationScript : MonoBehaviour
 
             pointInOrOut.Put(x + "," + y, "OUT");
             frontier.AddFirst(x + "," + y); ;
-            ChangeColorRed(x + "," + y);
+            gameManagerScript.ChangeColorRed(x + "," + y);
         }
     }
 
+    // Marks a cell as part of the maze and adds its neighbours to the frontier
     private void Mark(string point)
     {
         pointInOrOut.Put(point, "IN");
@@ -124,6 +137,7 @@ public class RandomPrimsGenerationScript : MonoBehaviour
         AddFrontier(x, y + 1);
     }
 
+    // Finds neighbouring cells that are already in the maze
     private void Neighbours(int x,int y)
     {
         neighbours.Clear();
@@ -145,6 +159,7 @@ public class RandomPrimsGenerationScript : MonoBehaviour
         }
     }
 
+    // Determines the direction to remove a wall between two cells
     private int Direction(int fx, int fy, int nx, int ny)
     {
         if (fx < nx)
@@ -184,35 +199,10 @@ public class RandomPrimsGenerationScript : MonoBehaviour
     void Update()
     {
         levelText.text = $"Level {GameManagerScript.level + 1}";
-        ChangeColorRed("0,0");
+        gameManagerScript.ChangeColorRed("0,0");
     }
 
-    public void ChangeColorRed(string point)
-    {
-        getFilling(point);
-        spriteR.color = Color.red;
-    }
-
-    void ChangeColorWhite(string point)
-    {
-        getFilling(point);
-        spriteR.color = Color.white;
-    }
-
-
-    void getFilling(string point)
-    {
-        //block = GameObject.Find(point);
-        block = gameManagerScript.pointToObject.get(point);
-
-        if (block != null)
-        {
-            GameObject childObj = block.transform.Find("Filling").gameObject;
-
-            spriteR = childObj.GetComponent<SpriteRenderer>();
-        }
-    }
-
+    // Removes the wall between a frontier cell and its neighbour
     void RemoveWall(string point, int wallNo)
     {
         // 1 = Left Wall
@@ -242,7 +232,7 @@ public class RandomPrimsGenerationScript : MonoBehaviour
                 Destroy(childObj);
             }
 
-            AddToGraph(point, newPoint);
+            gameManagerScript.AddToGraph(point, newPoint);
 
         }
         else if (wallNo == -1 && x < gameManagerScript.mazeWidth - 1)
@@ -263,7 +253,7 @@ public class RandomPrimsGenerationScript : MonoBehaviour
                 Destroy(childObj);
             }
 
-            AddToGraph(point, newPoint);
+            gameManagerScript.AddToGraph(point, newPoint);
 
         }
         else if (wallNo == 2 && y > 0)
@@ -284,7 +274,7 @@ public class RandomPrimsGenerationScript : MonoBehaviour
                 Destroy(childObj);
             }
 
-            AddToGraph(point, newPoint);
+            gameManagerScript.AddToGraph(point, newPoint);
 
         }
         else if (wallNo == -2 && y < gameManagerScript.mazeHeight - 1)
@@ -305,42 +295,7 @@ public class RandomPrimsGenerationScript : MonoBehaviour
                 Destroy(childObj);
             }
 
-            AddToGraph(point, newPoint);
-        }
-    }
-
-    void AddToGraph(string point, string newPoint)
-    {
-        if (!gameManagerScript.mazeGraph.ContainsKey(point))
-        {
-            gameManagerScript.mazeGraph.Put(point, new LinkedListScript<string>());
-            if (!gameManagerScript.mazeGraph.get(point).Contains(newPoint))
-            {
-                gameManagerScript.mazeGraph.get(point).AddLast(newPoint);
-            }
-        }
-        else
-        {
-            if (!gameManagerScript.mazeGraph.get(point).Contains(newPoint))
-            {
-                gameManagerScript.mazeGraph.get(point).AddLast(newPoint);
-            }
-        }
-
-        if (!gameManagerScript.mazeGraph.ContainsKey(newPoint))
-        {
-            gameManagerScript.mazeGraph.Put(newPoint, new LinkedListScript<string>());
-            if (!gameManagerScript.mazeGraph.get(newPoint).Contains(point))
-            {
-                gameManagerScript.mazeGraph.get(newPoint).AddLast(point);
-            }
-        }
-        else
-        {
-            if (!gameManagerScript.mazeGraph.get(newPoint).Contains(point))
-            {
-                gameManagerScript.mazeGraph.get(newPoint).AddLast(point);
-            }
+            gameManagerScript.AddToGraph(point, newPoint);
         }
     }
 }

@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 
+// Generates a maze using a stack-based depth-first search (iterative backtracking)
 public class SIBSpawnMazeScript : MonoBehaviour
 {
     public GameObject square;
 
+    // Delay between maze generation steps (visualisation)
     private float mazeGenerationSpeed;
 
     private string point;
@@ -21,12 +23,14 @@ public class SIBSpawnMazeScript : MonoBehaviour
 
     private int direction = 0;
 
+    // Custom stack used for DFS maze generation
     private string[] stack = new string[Stack.MaxSize];
     private int top = -1;
 
     private int possiblePaths;
     private string currentPoint;
 
+    // Movement directions (used for wall removal logic)
     private int[] directions = {-2, -1, 1, 2};
     private bool moved;
 
@@ -48,36 +52,44 @@ public class SIBSpawnMazeScript : MonoBehaviour
         StartCoroutine(CreateMaze());
     }
 
+    // Creates the maze using depth-first search with backtracking
     IEnumerator CreateMaze()            
     {
+        // Choose a random starting cell
         startingPoint = UnityEngine.Random.Range(0, (int)gameManagerScript.mazeWidth) + "," + UnityEngine.Random.Range(0, (int)gameManagerScript.mazeHeight);
 
+        // Push starting point onto stack
         Stack.push(ref top, stack, startingPoint);
 
-        ChangeColorRed(startingPoint);
+        // Mark start as visited and colour it
+        gameManagerScript.ChangeColorRed(startingPoint);
         visitedNodes.AddFirst(startingPoint);
 
         int[] validDirections = new int[] { -2, -1, 1, 2 };
         direction = validDirections[UnityEngine.Random.Range(0, validDirections.Length)];
 
-        string nextPoint = RemoveWall(startingPoint, direction);
+        // Attempt to remove a wall and move to next cell
+        string nextPoint = gameManagerScript.RemoveWall(startingPoint, direction, visitedNodes);
 
         if (nextPoint != "")
         {
             Stack.push(ref top, stack, nextPoint);
         }
 
+        // Continue until all cells have been visited
         while (!Stack.isEmpty(top))
         {
             moved = false;
             possiblePaths = 4;
 
+            // Get current cell from stack
             nextPoint = Stack.peek(stack, top);
             string[] coords = nextPoint.Split(',');
 
             int x = int.Parse(coords[0]);
             int y = int.Parse(coords[1]);
 
+            // Count how many neighbouring cells are already visited
             if (x + 1 < gameManagerScript.mazeWidth && visitedNodes.Contains((x + 1) + "," + y))
             {
                 possiblePaths -= 1;
@@ -95,26 +107,28 @@ public class SIBSpawnMazeScript : MonoBehaviour
                 possiblePaths -= 1;
             }
 
+            // Backtrack if no valid moves remain
             if (possiblePaths == 0)
             {
                 nextPoint = Stack.pop(ref top, stack);
-                ChangeColorWhite(nextPoint);
+                gameManagerScript.ChangeColorWhite(nextPoint);
                 visitedNodes.AddFirst(nextPoint);
                 yield return new WaitForSeconds(mazeGenerationSpeed);
             }
             else
             {
+                // Try directions in random order
                 int[] shuffledDirections = ShuffleArray(directions);
-                ChangeColorRed(nextPoint);
+                gameManagerScript.ChangeColorRed(nextPoint);
                 visitedNodes.AddFirst(nextPoint);
 
                 for (int i = 0; i < shuffledDirections.Length; i++)
                 {
-                    string currentPoint = RemoveWall(nextPoint, shuffledDirections[i]);
+                    string currentPoint = gameManagerScript.RemoveWall(nextPoint, shuffledDirections[i], visitedNodes);
                     if (currentPoint != "")
                     {
                         yield return new WaitForSeconds(mazeGenerationSpeed);
-                        ChangeColorRed(currentPoint);
+                        gameManagerScript.ChangeColorRed(currentPoint);
                         visitedNodes.AddFirst(currentPoint);
                         Stack.push(ref top, stack, currentPoint);
 
@@ -123,10 +137,11 @@ public class SIBSpawnMazeScript : MonoBehaviour
                     }
                 }
 
+                // Backtrack if no move was possible
                 if (!moved)
                 {
                     nextPoint = Stack.pop(ref top, stack);
-                    ChangeColorWhite(nextPoint);
+                    gameManagerScript.ChangeColorWhite(nextPoint);
                     yield return new WaitForSeconds(mazeGenerationSpeed);
                 }
             }
@@ -135,6 +150,7 @@ public class SIBSpawnMazeScript : MonoBehaviour
         gameManagerScript.mazeCreated = true;
     }
 
+    // Randomly shuffles direction array
     int[] ShuffleArray(int[] array)
     {
         int[] shuffledArray = (int[])array.Clone();
@@ -152,238 +168,11 @@ public class SIBSpawnMazeScript : MonoBehaviour
     void Update()
     {
         levelText.text = $"Level {GameManagerScript.level + 1}";
-        ChangeColorRed("0,0");
-    }
-
-    public void ChangeColorRed(string point)
-    {
-        getFilling(point);
-        spriteR.color = Color.red;
-    }
-
-    void ChangeColorWhite(string point)
-    {
-        getFilling(point);
-        spriteR.color = Color.white;
-    }
-    
-    void getFilling(string point)
-    {
-        //block = GameObject.Find(point);
-        block = gameManagerScript.pointToObject.get(point);
-
-        if (block != null)
-        {
-            GameObject childObj = block.transform.Find("Filling").gameObject;
-
-            spriteR = childObj.GetComponent<SpriteRenderer>();
-        }
-    }
-
-    string RemoveWall(string point, int wallNo)
-    {
-        // 1 = Left Wall
-        // -1 = Right Wall
-        // 2 = Top Wall
-        // -2 = Bottom Wall
-
-        string[] coords = point.Split(',');
-        int x = int.Parse(coords[0]);
-        int y = int.Parse(coords[1]);
-
-        if (wallNo == 1 && x > 0)
-        {
-            newPoint = (x - 1) + "," + y;
-
-            if (!visitedNodes.Contains(newPoint))
-            {
-                block = gameManagerScript.pointToObject.get(point);
-                GameObject childObj = block.transform.Find("Left Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
-                childObj = adjacentBlock.transform.Find("Right Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                AddToGraph(point, newPoint);
-
-                return newPoint;
-            }
-            else
-            {
-                return "";
-            }
-        }
-        else if (wallNo == -1 && x < gameManagerScript.mazeWidth -1)
-        {
-            newPoint = (x + 1) + "," + y;
-
-            if (!visitedNodes.Contains(newPoint))
-            {
-                block = gameManagerScript.pointToObject.get(point);
-                GameObject childObj = block.transform.Find("Right Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
-                childObj = adjacentBlock.transform.Find("Left Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                AddToGraph(point, newPoint);
-
-                return newPoint;
-            }
-            else
-            {
-                return "";
-            }
-        }
-        else if (wallNo == 2 && y > 0)
-        {
-            newPoint = x + "," + (y - 1);
-
-            if (!visitedNodes.Contains(newPoint))
-            {
-                block = gameManagerScript.pointToObject.get(point);
-                GameObject childObj = block.transform.Find("Top Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
-                childObj = adjacentBlock.transform.Find("Bottom Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                AddToGraph(point, newPoint);
-
-                return newPoint;
-            }
-            else
-            {
-                return "";
-            }
-        }
-        else if (wallNo == -2 && y < gameManagerScript.mazeHeight -1)
-        {
-            newPoint = x + "," + (y + 1);
-
-            if (!visitedNodes.Contains(newPoint))
-            {
-                block = gameManagerScript.pointToObject.get(point);
-                GameObject childObj = block.transform.Find("Bottom Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
-                childObj = adjacentBlock.transform.Find("Top Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                AddToGraph(point, newPoint);
-
-                return newPoint;
-            }
-            else
-            {
-                return "";
-            }
-        }
-        else
-        {
-            return "";
-        }
-    }
-
-    /*void AddToGraph(string point, string newPoint)
-    {
-        if (!gameManagerScript.mazeGraph.ContainsKey(point))
-        {
-            gameManagerScript.mazeGraph.Add(point, new List<string>());
-            if (!gameManagerScript.mazeGraph[point].Contains(newPoint))
-            {
-                gameManagerScript.mazeGraph[point].Add(newPoint);
-            }
-        }
-        else
-        {
-            if (!gameManagerScript.mazeGraph[point].Contains(newPoint))
-            {
-                gameManagerScript.mazeGraph[point].Add(newPoint);
-            }
-        }
-
-        if (!gameManagerScript.mazeGraph.ContainsKey(newPoint))
-        {
-            gameManagerScript.mazeGraph.Add(newPoint, new List<string>());
-            if (!gameManagerScript.mazeGraph[newPoint].Contains(point))
-            {
-                gameManagerScript.mazeGraph[newPoint].Add(point);
-            }
-        }
-        else
-        {
-            if (!gameManagerScript.mazeGraph[newPoint].Contains(point))
-            {
-                gameManagerScript.mazeGraph[newPoint].Add(point);
-            }
-        }
-    }*/
-
-    void AddToGraph(string point, string newPoint)
-    {
-        if (!gameManagerScript.mazeGraph.ContainsKey(point))
-        {
-            gameManagerScript.mazeGraph.Put(point, new LinkedListScript<string>());
-            if (!gameManagerScript.mazeGraph.get(point).Contains(newPoint))
-            {
-                gameManagerScript.mazeGraph.get(point).AddLast(newPoint);
-            }
-        }
-        else
-        {
-            if (!gameManagerScript.mazeGraph.get(point).Contains(newPoint))
-            {
-                gameManagerScript.mazeGraph.get(point).AddLast(newPoint);
-            }
-        }
-
-        if (!gameManagerScript.mazeGraph.ContainsKey(newPoint))
-        {
-            gameManagerScript.mazeGraph.Put(newPoint, new LinkedListScript<string>());
-            if (!gameManagerScript.mazeGraph.get(newPoint).Contains(point))
-            {
-                gameManagerScript.mazeGraph.get(newPoint).AddLast(point);
-            }
-        }
-        else
-        {
-            if (!gameManagerScript.mazeGraph.get(newPoint).Contains(point))
-            {
-                gameManagerScript.mazeGraph.get(newPoint).AddLast(point);
-            }
-        }
+        gameManagerScript.ChangeColorRed("0,0");
     }
 }
 
+// Custom stack implementation used for DFS
 internal class Stack
 {
     public static int MaxSize = 10000;

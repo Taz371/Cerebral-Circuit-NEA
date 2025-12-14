@@ -8,14 +8,13 @@ using System;
 public class EnemyObjectScript : MonoBehaviour
 {
     private GameManagerScript gameManagerScript;
-    private BreadthFirstSearchScript pathFindingScript;
+    private BreadthFirstSearchScript breadthFirstSearchScript;
     private PlayerMovementScript playerMovementScript;
 
     public string enemyPosition;
 
     private float enemySpeed = 0.5f;
 
-    //private List<string> enemyPath = new List<string>();
     LinkedListScript<string> enemyPath = new LinkedListScript<string>();
 
     private bool initiated;
@@ -24,7 +23,7 @@ public class EnemyObjectScript : MonoBehaviour
     void Start()
     {
         gameManagerScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManagerScript>();
-        pathFindingScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<BreadthFirstSearchScript>();
+        breadthFirstSearchScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<BreadthFirstSearchScript>();
         playerMovementScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovementScript>();
 
         enemyPosition = gameObject.name;
@@ -53,7 +52,7 @@ public class EnemyObjectScript : MonoBehaviour
     {
         while (true)
         {
-            enemyPath = pathFindingScript.BreadthFirstSearch(enemyPosition, playerMovementScript.playerPosition);
+            enemyPath = breadthFirstSearchScript.BreadthFirstSearch(enemyPosition, playerMovementScript.playerPosition);
             Debug.Log(enemyPath.count);
             if (enemyPath.count > 1)
             {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 
+// Generates a maze using recursive backtracking (depth-first search)
 public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
 {
     public GameObject square;
@@ -50,15 +51,16 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
         gameManagerScript.mazeCreated = true;
     }
 
+    // Recursive function to generate the maze using DFS
     IEnumerator GenerateMazeRecursive(string point)
     {
         int[] shuffledDirections = ShuffleArray(directions);
-        ChangeColorRed(point);
+        gameManagerScript.ChangeColorRed(point);
         visitedNodes.AddFirst(point);
 
         for (int i = 0; i < shuffledDirections.Length; i++)
         {
-            string nextPoint = RemoveWall(point, shuffledDirections[i]);
+            string nextPoint = gameManagerScript.RemoveWall(point, shuffledDirections[i], visitedNodes);
             if (nextPoint != "")
             {
                 yield return new WaitForSeconds(mazeGenerationSpeed);
@@ -66,7 +68,7 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
             }
         }
 
-        ChangeColorWhite(point);
+        gameManagerScript.ChangeColorWhite(point);
         yield return new WaitForSeconds(mazeGenerationSpeed);
     }
 
@@ -87,162 +89,7 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
     void Update()
     {
         levelText.text = $"Level {GameManagerScript.level + 1}";
-        ChangeColorRed("0,0");
-    }
-
-    public void ChangeColorRed(string point)
-    {
-        getFilling(point);
-        spriteR.color = Color.red;
-    }
-
-    void ChangeColorWhite(string point)
-    {
-        getFilling(point);
-        spriteR.color = Color.white;
-    }
-
-    void getFilling(string point)
-    {
-        block = gameManagerScript.pointToObject.get(point);
-        if (block != null)
-        {
-            GameObject childObj = block.transform.Find("Filling").gameObject;
-            spriteR = childObj.GetComponent<SpriteRenderer>();
-        }
-    }
-
-    string RemoveWall(string point, int wallNo)
-    {
-        // 1 = Left Wall
-        // -1 = Right Wall
-        // 2 = Top Wall
-        // -2 = Bottom Wall
-
-        string[] coords = point.Split(',');
-        int x = int.Parse(coords[0]);
-        int y = int.Parse(coords[1]);
-
-        if (wallNo == 1 && x > 0)
-        {
-            newPoint = (x - 1) + "," + y;
-
-            if (!visitedNodes.Contains(newPoint))
-            {
-                block = gameManagerScript.pointToObject.get(point);
-                GameObject childObj = block.transform.Find("Left Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
-                childObj = adjacentBlock.transform.Find("Right Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                AddToGraph(point, newPoint);
-
-                return newPoint;
-            }
-            else
-            {
-                return "";
-            }
-        }
-        else if (wallNo == -1 && x < gameManagerScript.mazeWidth - 1)
-        {
-            newPoint = (x + 1) + "," + y;
-
-            if (!visitedNodes.Contains(newPoint))
-            {
-                block = gameManagerScript.pointToObject.get(point);
-                GameObject childObj = block.transform.Find("Right Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
-                childObj = adjacentBlock.transform.Find("Left Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                AddToGraph(point, newPoint);
-
-                return newPoint;
-            }
-            else
-            {
-                return "";
-            }
-        }
-        else if (wallNo == 2 && y > 0)
-        {
-            newPoint = x + "," + (y - 1);
-
-            if (!visitedNodes.Contains(newPoint))
-            {
-                block = gameManagerScript.pointToObject.get(point);
-                GameObject childObj = block.transform.Find("Top Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
-                childObj = adjacentBlock.transform.Find("Bottom Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                AddToGraph(point, newPoint);
-
-                return newPoint;
-            }
-            else
-            {
-                return "";
-            }
-        }
-        else if (wallNo == -2 && y < gameManagerScript.mazeHeight - 1)
-        {
-            newPoint = x + "," + (y + 1);
-
-            if (!visitedNodes.Contains(newPoint))
-            {
-                block = gameManagerScript.pointToObject.get(point);
-                GameObject childObj = block.transform.Find("Bottom Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                GameObject adjacentBlock = gameManagerScript.pointToObject.get(newPoint);
-                childObj = adjacentBlock.transform.Find("Top Wall").gameObject;
-                if (childObj != null)
-                {
-                    Destroy(childObj);
-                }
-
-                AddToGraph(point, newPoint);
-
-                return newPoint;
-            }
-            else
-            {
-                return "";
-            }
-        }
-        else
-        {
-            return "";
-        }
+        gameManagerScript.ChangeColorRed("0,0");
     }
 
     void AddToGraph(string point, string newPoint)
