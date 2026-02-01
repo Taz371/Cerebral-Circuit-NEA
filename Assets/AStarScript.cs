@@ -22,9 +22,6 @@ public class AStarScript : MonoBehaviour
     public GameManagerScript gameManagerScript;
     public PlayerMovementScript playerMovementScript;
 
-    private GameObject block;
-    private SpriteRenderer spriteR;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

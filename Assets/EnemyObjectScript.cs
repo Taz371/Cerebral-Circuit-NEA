@@ -52,6 +52,10 @@ public class EnemyObjectScript : MonoBehaviour
     {
         while (true)
         {
+            if (gameManagerScript.deathScreenActive || gameManagerScript.winScreenActive)
+            {
+                yield break;
+            }
             enemyPath = breadthFirstSearchScript.BreadthFirstSearch(enemyPosition, playerMovementScript.playerPosition);
             Debug.Log(enemyPath.count);
             if (enemyPath.count > 1)

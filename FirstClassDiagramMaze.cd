@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AStarScript">
+    <Position X="5.5" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEQAAAAAACAAAgABAAACAgAEAAAAAEAAAAgAACAABAA=</HashCode>
+      <FileName>Assets\AStarScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BreadthFirstSearchScript">
+    <Position X="8.75" Y="1" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AERAAAAAACAAAAAAAAAABAAFAAAAAAAAAAgAACAABGA=</HashCode>
+      <FileName>Assets\BreadthFirstSearchScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Queue">
+    <Position X="37" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAgAACAAQQAA=</HashCode>
+      <FileName>Assets\BreadthFirstSearchScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CreateGridScript">
+    <Position X="15.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAgAAAAAAAAAAAAgAABAAIAA=</HashCode>
+      <FileName>Assets\CreateGridScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyObjectScript">
+    <Position X="9.5" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAQACABAAAEAIAAAAAAAAAAQAAAACgAACAAAAA=</HashCode>
+      <FileName>Assets\EnemyObjectScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyScript">
+    <Position X="18.5" Y="2.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>gARAAAAAACABAEAAIAAAAAAAAAAAAAAAAIgAACAQAAI=</HashCode>
+      <FileName>Assets\EnemyScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillingScript">
+    <Position X="21.75" Y="7" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEQAAAACACAAAAAAAAAAAAAABEAAAAAAAAgAACAAAAA=</HashCode>
+      <FileName>Assets\FillingScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameManagerScript">
+    <Position X="13" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AMRRgAQEgCBTwiAAAoQgwJIAFAUCAEBAgEYQDAERB0I=</HashCode>
+      <FileName>Assets\GameManagerScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HashTableScript&lt;T1, T2&gt;">
+    <Position X="33.5" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAFAAAABEAARAAAAAAAABAAAAAAAAAAAAg=</HashCode>
+      <FileName>Assets\HashTableScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LinkedListScript&lt;T&gt;">
+    <Position X="31.25" Y="2.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="LinkedListScript&lt;T&gt;.Node">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\LinkedListScript.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAIABAAgABAAAEADAAgYAAAAAAQAAAAAAAAAABQAgA=</HashCode>
+      <FileName>Assets\LinkedListScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MainMenuScript">
+    <Position X="21.75" Y="3" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAEAAAAAAAAAAAAAAAAAIAAAAAAACAAAGAAAAAAAAA=</HashCode>
+      <FileName>Assets\MainMenuScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OptionsData">
+    <Position X="1" Y="8.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\OptionsData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerMovementScript">
+    <Position X="17.25" Y="9" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAABAAKAAAAAAAAAAAAAAAAACAAAAAAgAAAAAgAA=</HashCode>
+      <FileName>Assets\PlayerMovementScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RandomPrimsGenerationScript">
+    <Position X="2" Y="1.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AEREAACAACAQQgCAACEIwAkAAgCEAEAAAEiAAAAgJAA=</HashCode>
+      <FileName>Assets\RandomPrimsGenerationScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RecursiveBacktrackingMazeGenerationScript">
+    <Position X="24.5" Y="7" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AEVAAACAACAQAgAAgAEoQAEAAgCEAAAAAAgAAAAAJAA=</HashCode>
+      <FileName>Assets\RecursiveBacktrackingMazeGenerationScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SIBSpawnMazeScript">
+    <Position X="4.75" Y="8.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AERAAACAACAQYgAAgAEIQAkAAgCEAIAAAAgAAAAgJAA=</HashCode>
+      <FileName>Assets\SIBSpawnMazeScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Stack">
+    <Position X="34" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAEAIAAAAAAAAAIAgAIAAAAQAA=</HashCode>
+      <FileName>Assets\SIBSpawnMazeScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="MazeAlgorithm">
+    <Position X="1.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAIAAABAAAAAAAAEAAAA=</HashCode>
+      <FileName>Assets\OptionsData.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

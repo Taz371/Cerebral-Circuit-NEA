@@ -322,7 +322,7 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    // Remove wall function only for the Interative/Recursive Backtracking
+    // Remove wall function only for the Iterative/Recursive Backtracking
     // Removes wall between cells if the new cell hasn't been visited
     public string RemoveWall(string point, int wallNo, LinkedListScript<string> visitedNodes)
     {

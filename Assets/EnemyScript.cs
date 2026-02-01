@@ -11,22 +11,16 @@ public class EnemyScript : MonoBehaviour
     private GameObject newEnemy;
 
     private GameManagerScript gameManagerScript;
-    private BreadthFirstSearchScript pathFindingScript;
-    private PlayerMovementScript playerMovementScript;
 
     public string enemySpawnPoint;
     public string enemyPosition;
 
     private int numberOfEnemiesInGame = 0;
 
-    private List<string> enemyPath = new List<string>();
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         gameManagerScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManagerScript>();
-        pathFindingScript = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<BreadthFirstSearchScript>();
-        playerMovementScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovementScript>();
     }
 
     // Update is called once per frame

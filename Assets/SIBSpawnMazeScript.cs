@@ -8,19 +8,9 @@ using System;
 // Generates a maze using a stack-based depth-first search (iterative backtracking)
 public class SIBSpawnMazeScript : MonoBehaviour
 {
-    public GameObject square;
-
-    // Delay between maze generation steps (visualisation)
-    private float mazeGenerationSpeed;
-
-    private string point;
-    private GameObject block;                                                
-
-    private SpriteRenderer spriteR;
+    public GameObject square;                                     
 
     private string startingPoint;
-    private string newPoint;
-
     private int direction = 0;
 
     // Custom stack used for DFS maze generation
@@ -28,17 +18,12 @@ public class SIBSpawnMazeScript : MonoBehaviour
     private int top = -1;
 
     private int possiblePaths;
-    private string currentPoint;
 
     // Movement directions (used for wall removal logic)
     private int[] directions = {-2, -1, 1, 2};
     private bool moved;
 
-    private GameObject childObj;
-
     public Text levelText;
-
-    private string listToString;
 
     public GameManagerScript gameManagerScript;
 

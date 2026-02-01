@@ -15,10 +15,6 @@ public class BreadthFirstSearchScript : MonoBehaviour
 
     // Delay between showing each step of the solution
     public float solveSpeed; 
-    private Coroutine solveRoutine;
-
-    private GameObject block;
-    private SpriteRenderer spriteR;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -136,7 +132,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
 
             foreach (string vertex in graph.get(currentVertex).AsEnumerable())
             {
-                if (!visited.Contains(vertex) && !Queue.Contains(queue, vertex))
+                if (!visited.Contains(vertex))
                 {
                     rear = Queue.enQueue(queue, rear, vertex);
                     visited.AddFirst(vertex);

@@ -10,25 +10,11 @@ public class RecursiveBacktrackingMazeGenerationScript : MonoBehaviour
 {
     public GameObject square;
 
-    private float mazeGenerationSpeed;
-
-    private string point;
-    private GameObject block;
-
-    private SpriteRenderer spriteR;
-
     private string startingPoint;
-    private string newPoint;
-
-    private string currentPoint;
 
     private int[] directions = { -2, -1, 1, 2 };
 
-    private GameObject childObj;
-
     public Text levelText;
-
-    private string listToString;
 
     public GameManagerScript gameManagerScript;
 

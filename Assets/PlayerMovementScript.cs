@@ -20,7 +20,7 @@ public class PlayerMovementScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!gameManagerScript.winScreenActive && ! gameManagerScript.deathScreenActive)
+        if (!gameManagerScript.winScreenActive && ! gameManagerScript.deathScreenActive && gameManagerScript.mazeCreated)
         {
             Move();
         }
@@ -32,19 +32,19 @@ public class PlayerMovementScript : MonoBehaviour
 
     void Move()
     {
-        if (Input.GetKey(KeyCode.W) == true)
+        if (Input.GetKey(KeyCode.W) == true || Input.GetKey(KeyCode.UpArrow) == true)
         {
             myRigidBody.linearVelocity = Vector2.up * playerSpeed;
         }
-        else if (Input.GetKey(KeyCode.S) == true)
+        else if (Input.GetKey(KeyCode.S) == true || Input.GetKey(KeyCode.DownArrow) == true)
         {
             myRigidBody.linearVelocity = Vector2.down * playerSpeed;
         }
-        else if (Input.GetKey(KeyCode.A) == true)
+        else if (Input.GetKey(KeyCode.A) == true || Input.GetKey(KeyCode.LeftArrow) == true)
         {
             myRigidBody.linearVelocity = Vector2.left * playerSpeed;
         }
-        else if (Input.GetKey(KeyCode.D) == true)
+        else if (Input.GetKey(KeyCode.D) == true || Input.GetKey(KeyCode.RightArrow) == true)
         {
             myRigidBody.linearVelocity = Vector2.right * playerSpeed;
         }
