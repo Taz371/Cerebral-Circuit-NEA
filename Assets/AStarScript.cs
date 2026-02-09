@@ -22,6 +22,8 @@ public class AStarScript : MonoBehaviour
     public GameManagerScript gameManagerScript;
     public PlayerMovementScript playerMovementScript;
 
+    bool isSolving = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,7 +35,7 @@ public class AStarScript : MonoBehaviour
     void Update()
     {
         // Trigger A* maze solver when 'F' key is pressed
-        if (Input.GetKeyDown(KeyCode.F) == true)
+        if (Input.GetKeyDown(KeyCode.F) == true && !isSolving)
         {
             StartCoroutine(SolveMaze());
         }
@@ -41,17 +43,19 @@ public class AStarScript : MonoBehaviour
 
     public IEnumerator SolveMaze()
     {
+        isSolving = true;
         // Run A* search and wait for it to complete
         yield return StartCoroutine(aStar(playerMovementScript.playerPosition, gameManagerScript.winPoint));
 
-        // Animate the resulting path by coloring cells blue
+        // Animate the resulting path by colouring cells blue
         int i = 0;
         while (i < path.count && path[i] != gameManagerScript.winPoint)
         {
             gameManagerScript.ChangeColorBlue(path[i]);
             i++;
-            yield return new WaitForSeconds(0f);
+            yield return new WaitForSeconds(0);
         }
+        isSolving = false;
     }
 
     public IEnumerator aStar(string startPos, string targetPos)

@@ -218,16 +218,39 @@ public class GameManagerScript : MonoBehaviour
     {
         try
         {
-            isCustom = true;
-
-            if ((float.Parse(customWidth.text) == 1 || float.Parse(customHeight.text) == 1) && int.Parse(customEnemies.text) > 0)
+            /*Debug.Log(customWidth.text);
+            Debug.Log(customHeight.text);
+            Debug.Log(customEnemies.text);
+            if (float.Parse(customWidth.text) < 1 || float.Parse(customHeight.text) < 1 || int.Parse(customEnemies.text) < 0)
             {
-                throw new ArgumentException("Please supply at least one argument.");
-            }
+                throw new ArgumentException("Invalid input");
+            }*/
 
-            customMazeWidth = float.Parse(customWidth.text);
-            customMazeHeight = float.Parse(customHeight.text);
-            numberOfEnemies = int.Parse(customEnemies.text);
+            isCustom = true;
+            if (customWidth.text == "" || float.Parse(customWidth.text) < 1)
+            {
+                customMazeWidth = mazeWidth;
+            }
+            else
+            {
+                customMazeWidth = float.Parse(customWidth.text);
+            }
+            if (customHeight.text == "" || float.Parse(customHeight.text) < 1)
+            {
+                customMazeHeight = mazeHeight;
+            }
+            else
+            {
+                customMazeHeight = float.Parse(customHeight.text);
+            }
+            if (customEnemies.text == "" || float.Parse(customEnemies.text) < 0)
+            {
+                numberOfEnemies = 0;
+            }
+            else
+            {
+                numberOfEnemies = int.Parse(customEnemies.text);
+            }
 
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }

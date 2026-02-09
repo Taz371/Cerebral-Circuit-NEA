@@ -44,7 +44,7 @@ public class BreadthFirstSearchScript : MonoBehaviour
         // Get the final BFS path from start to goal
         solvedPath = BreadthFirstSearch(playerMovementScript.playerPosition, gameManagerScript.winPoint);
 
-        // Animate the path by coloring the cells blue
+        // Animate the path by colouring the cells blue
         int i = 0;
         while (i < solvedPath.count && solvedPath[i] != gameManagerScript.winPoint)
         {
